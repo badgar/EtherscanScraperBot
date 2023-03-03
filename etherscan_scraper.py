@@ -21,19 +21,23 @@ def pick_random_user_agent():
 
 def get_explorer():
     header = pick_random_user_agent()
-    print(f'Timestamp: {time.time()}')
+    print(f'Timestamp: {datetime.utcnow()}')
     print(f'User agent: {header}')
 
     while True:
         try:
             response = requests.get(
-                "https://etherscan.io/contractsVerified?ps=10",
+                "https://etherscan.io/contractsVerified",
                 headers=header,
                 timeout=15
             )
+            print(response)
             if response.status_code == 200:
                 return response.content
-        except requests.exceptions as e:
+            else:
+                header = pick_random_user_agent()
+
+        except requests.exceptions.RequestException as e:
             print(e)
             header = pick_random_user_agent()
 
